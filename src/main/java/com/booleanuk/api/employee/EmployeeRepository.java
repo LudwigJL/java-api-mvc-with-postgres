@@ -44,21 +44,6 @@ public class EmployeeRepository {
         return dataSource;
     }
 
-    public void connectToDatabase() throws SQLException  {
-        PreparedStatement statement = this.connection.prepareStatement("SELECT * FROM Employee");
-
-        ResultSet results = statement.executeQuery();
-
-        while (results.next()) {
-            String id = "" + results.getLong("id");
-            String name = results.getString("name");
-            String jobName = results.getString("job_name");
-            String salaryGrade = results.getString("salary_grade");
-            String department = results.getString("department");
-            System.out.println(id + " - " + name + " - " + jobName + " - " + salaryGrade + " - " + department);
-        }
-    }
-
     public List<Employee> getAll() throws SQLException  {
         List<Employee> everyone = new ArrayList<>();
         PreparedStatement statement = this.connection.prepareStatement("SELECT * FROM EMPLOYEE");
@@ -66,7 +51,7 @@ public class EmployeeRepository {
         ResultSet results = statement.executeQuery();
 
         while (results.next()) {
-            Employee theEmployee = new Employee(results.getInt("id"), results.getString("name"), results.getString("job_name"), results.getString("salary_grade"), results.getString("department"));
+            Employee theEmployee = new Employee(results.getInt("id"), results.getString("name"), results.getString("job_name"), results.getInt("salary_grade"), results.getString("department"));
             everyone.add(theEmployee);
         }
         return everyone;
@@ -78,7 +63,7 @@ public class EmployeeRepository {
         ResultSet results = statement.executeQuery();
         Employee employee = null;
         if (results.next()){
-            employee = new Employee(results.getInt("id"), results.getString("name"), results.getString("job_name"), results.getString("salary_grade"), results.getString("department"));
+            employee = new Employee(results.getInt("id"), results.getString("name"), results.getString("job_name"), results.getInt("salary_grade"), results.getString("department"));
         }
         return employee;
     }
@@ -93,7 +78,7 @@ public class EmployeeRepository {
         PreparedStatement statement = this.connection.prepareStatement(SQL);
         statement.setString(1, employee.getName());
         statement.setString(2, employee.getJobName());
-        statement.setString(3, employee.getSalaryGrade());
+        statement.setInt(3, employee.getSalaryGrade());
         statement.setString(4, employee.getDepartment());
         statement.setLong(5, id);
 
@@ -126,7 +111,7 @@ public class EmployeeRepository {
         PreparedStatement statement = this.connection.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, employee.getName());
         statement.setString(2, employee.getJobName());
-        statement.setString(3, employee.getSalaryGrade());
+        statement.setInt(3, employee.getSalaryGrade());
         statement.setString(4, employee.getDepartment());
         int rowsAffected = statement.executeUpdate();
         int newId = 0;
